@@ -7,7 +7,8 @@ export const meta = {
   title: 'Build-Time Environment Variables and Secrets',
   description: 'Creating and using environment variables and creating and using secret environment variables during the build stage of your Now deployments',
   date: '19 July 2018',
-  editUrl: 'pages/docs/features/build-env-and-secrets.md'
+  editUrl: 'pages/docs/features/build-env-and-secrets.md',
+  image: IMAGE_ASSETS_URL + '/docs/build-env/twitter-card.png'
 }
 
 > If you're looking for information covering Environment Variables and Secrets to use within your app, head over to our guide for [Run-Time Env and Secrets](/docs/features/env-and-secrets)
