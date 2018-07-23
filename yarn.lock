@@ -3473,9 +3473,9 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-next@6.1.1-canary.0:
-  version "6.1.1-canary.0"
-  resolved "https://registry.yarnpkg.com/next/-/next-6.1.1-canary.0.tgz#6b7bf31882999320c9eaad54b2989259725030c7"
+next@6.1.1-canary.2:
+  version "6.1.1-canary.2"
+  resolved "https://registry.npmjs.org/next/-/next-6.1.1-canary.2.tgz#37b421d7da5523762836a8b6eba3c91d5465eaac"
   dependencies:
     "@babel/core" "7.0.0-beta.42"
     "@babel/plugin-proposal-class-properties" "7.0.0-beta.42"
