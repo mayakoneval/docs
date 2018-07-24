@@ -5,25 +5,25 @@ import { TerminalInput } from '../../../components/text/terminal'
 
 export const meta = {
   title: 'Build-Time Environment Variables and Secrets',
-  description: 'Creating and using environment variables and creating and using secret environment variables during the build stage of your Now deployments',
+  description: 'Creating and using environment variables and creating and using secret environment variables during the build stage of Now deployments',
   date: '19 July 2018',
   editUrl: 'pages/docs/features/build-env-and-secrets.md',
   image: IMAGE_ASSETS_URL + '/docs/build-env/twitter-card.png'
 }
 
-> If you're looking for information covering Environment Variables and Secrets to use within your app, head over to our guide for [Run-Time Env and Secrets](/docs/features/env-and-secrets)
+> If you are looking for information covering environment variables and secrets to use within your app, read our guide on [Run-Time Env and Secrets](/docs/features/env-and-secrets)
 
-There are multiple stages to deploying your app, for example installing dependencies. For Now to recognize that your app needs a build step, your app will need a `Dockerfile`.
+There are multiple stages involved in the process of deploying an app, for example installing dependencies. For Now to recognize that an app needs a build step, that app will need a `Dockerfile`, which will contain all of the build steps for the app.
 
-Having a `Dockerfile` is a brilliant way to configure the process of your app being built so that Now will be able to build your app and then deploy using your configuration.
+Using a `Dockerfile` is to define the process of an app being built on Now, which will deploy the app after the build process using the `Dockerfile` configuration.
 
-During your build, you may need information that you do not want to hard code into your app or want to keep in a configuration for the app. In this case, Now supports a method that allows you to give an environment variable or secret for your deployment to use where you need that information.
+During the build process, information that needs to be used at that time might not be safe to hard code into the app or preferred to be kept in a configuration file for the app. In this case, Now supports a method that allows assigning an environment variable or secret for deployments to use during build time.
 
 ## Step 1: Setting up Build Environment Variables and Secrets
-To use your custom environment variables or secrets in the build process on Now, there are two methods.
+To use custom environment variables or secrets in the build process on Now, there are two methods.
 
 ### The `now.json` method
-You can provide your Now deployment with environment variables directly from within your `now.json` configuration file. To do so for the build step, you will need to place this information within the `build.env` property. For example:
+Provide a Now deployment with environment variables directly from within the `now.json` configuration file. To do so for the build step, the environment variables must be within the `build.env` property. For example:
 
 ```
 {
@@ -37,22 +37,22 @@ You can provide your Now deployment with environment variables directly from wit
 <Caption>Listing the `NODE_ENV` build environment variable with the value of `production` within a `now.json` configuration file and within the `build.env` property.</Caption>
 
 ### The Now CLI Method
-You can use the built-in `--build-env` parameter to pass your environment variables to the build stage of your Now deployment. For example, the following command will give the `NODE_ENV` environment variable the value of `production`.
+Using the built-in `--build-env` parameter to pass environment variables to the build stage of a Now deployment. For example, the following command will give the `NODE_ENV` environment variable the value of `production`:
 
 <TerminalInput>now --build-env NODE_ENV=production</TerminalInput>
-<Caption>Setting the `NODE_ENV` build environment variables to have a value of `production` with the Now CLI</Caption>
+<Caption>Setting the `NODE_ENV` build environment variables to have a value of `production` with Now CLI</Caption>
 
 ### Using Secrets
-Secrets are a way to keep information from being displayed in your configuration or in your code. [Now will store secrets associated to your account or team](/docs/features/env-and-secrets#securing-env-variables-using-secrets), ready for usage with environment variables.
+Secrets are a way to keep information from being displayed in configuration or in code. [Now will store secrets associated with an account or team](/docs/features/env-and-secrets#securing-env-variables-using-secrets) ready for use with environment variables.
 
-To use secrets with Now in the build stage, we first need to add our secret with the `now secret` command in the Now CLI.
+To use secrets with Now in the build stage, the first step is to add a secret with the `now secret` command in Now CLI.
 
 <TerminalInput>now secret add npm-token NPM_TOKEN_VALUE</TerminalInput>
-<Caption>Adding the `npm-token` secret to your account or team, with the example of a value</Caption>
+<Caption>Adding the `npm-token` secret to an account or team, with the example of a value</Caption>
 
-We can now use this secret at build-time by passing it as an environment variable, using both methods above but by using an `@` symbol before the value.
+The second step to using a secret at build-time is to pass it as an environment variable, using both methods above but by using an `@` symbol before the value.
 
-For example, in a `now.json` configuration, it would look like this:
+For example, in a `now.json` configuration, it will look like this:
 
 ```
 {
@@ -63,44 +63,41 @@ For example, in a `now.json` configuration, it would look like this:
   }
 }
 ```
-<Caption>Using our `npm-token` that we added to our account or team before with an environment variable within a `now.json` configuration.</Caption>
+<Caption>Using the `npm-token` secret with an environment variable within a `now.json` configuration.</Caption>
 
-You can also use secrets in the CLI using the same method of using the `@` symbol before the value
+It is also possible to use secrets with Now CLI using the same method of using the `@` symbol before the value
 
 Read more about [secrets within Now](/docs/features/env-and-secrets#securing-env-variables-using-secrets) for more examples and information.
 
 ## Step 2: Using Build Environment Variables and Secrets
-When we have set up our environment variables using one of the methods above, with secrets or not, we are now ready to use them within the build step.
+With environment variables set up using one of the methods above, with secrets or not, use them within the build step using a `Dockerfile`.
 
-By creating a `Dockerfile` we can let Now know that we want a build step for our app. Within that `Dockerfile`, we can use our environment variables that we setup in previous steps (including those with values associated with secrets) using the [`ARG` instruction](https://docs.docker.com/engine/reference/builder/#arg).
+Having a `Dockerfile` gives Now the context that a build step exists for an app. Within that `Dockerfile`, use environment variables set up in previous steps (including those with values associated with secrets) using the [`ARG` instruction](https://docs.docker.com/engine/reference/builder/#arg).
 
-For example, if we want to use the `NPM_TOKEN` environment variable from our [last step](#using-secrets) we can use the following in a `Dockerfile`:
+For example, to use the `NPM_TOKEN` environment variable from the [last step](#using-secrets) use the following in a `Dockerfile`:
 ```
 ARG NPM_TOKEN
 ```
 <Caption>Creating an ARG variable with the value of an earlier created environment variable</Caption>
 
-The `Dockerfile` and Now will associate the value of that ARG with the `NPM_TOKEN` environment variable. We can then subsequently use this value by referencing the ARG with the same name with a `$` prefixing it.
+The `Dockerfile` and Now will associate the value of that `ARG` with the `NPM_TOKEN` environment variable. Then, subsequently use this value by referencing the `ARG` with the same name with a `$` prefixing it.
 
 ```
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
 ```
-<Caption>Using an environment variable and ARG in conjunction to output a valid `.npmrc` for private npm</Caption>
+<Caption>Using an environment variable and `ARG` in conjunction to output a valid `.npmrc` for private npm</Caption>
 
-> Note that by default your deployment will be detected as a Docker deployment when you have a Dockerfile. If you're using the Dockerfile to build a static app, make sure you mark your app as [`"type": "static"` within your now.json configuration](docs/features/static-builds#step-3:-configuring-now-for-static-deployments).
+> Note that by default an app with a `Dockerfile` deployment will be detected as a Docker deployment. Make sure to mark an app as [`"type": "static"` within the now.json configuration](docs/features/static-builds#step-3:-configuring-now-for-static-deployments) if the app should be deployed and built as static using the `Dockerfile`.
 
-## Example
-Now that we've gone through the steps and methods of using environment variables and secrets in the build step, let's take a look at an example.
+## Example of using environment variables to install private npm packages
+To use private npm packages, npm requires that apps provide an auth token. It is not always possible or safe to hardcode this auth token, so environment variables and secrets are the features available to manage this.
 
-### Using Private npm packages
-To use private npm packages, npm requires that we provide an auth token. We don't always want to hardcode this auth token, so we can use environment variables and secrets to manage this.
-
-To start, let's get a new token. npm will give us a new token using the command `npm token create --read-only` but we probably don't want to share that token around. To protect the token from getting out for anyone else to use, we can use the `now secret` command.
+To start, a new token is needed. npm will create a new token using the command `npm token create --read-only`. It is better to keep this token secret to avoid others gaining access to private packages. To protect the token from reaching others outside of those intended, the `now secret` command will take the token and associate it with an account or team ready to be used with environment variables.
 
 <TerminalInput>now secret add npm-token NPM_TOKEN_VALUE</TerminalInput>
-<Caption>Adding the `npm-token` secret to our account or team.</Caption>
+<Caption>Adding the `npm-token` secret to an account or team.</Caption>
 
-Once our secret is added, we can use that secret in our `now.json` configuration.
+Once the secret is added, it can be used in a `now.json` configuration using environment variables.
 ```
 {
   "build": {
@@ -110,21 +107,21 @@ Once our secret is added, we can use that secret in our `now.json` configuration
   }
 }
 ```
-<Caption>Note that you can also use the [Now CLI method](#the-now-cli-method) for this also.</Caption>
+<Caption>This is also possible with the [Now CLI method](#the-now-cli-method).</Caption>
 
-> You can extend your `now.json` configuration beyond just `build.env`. [Read more about configuring deployments](/docs/features/configuration).
+> The `now.json` configuration can be extended beyond just a `build.env` property. [Read more about configuring deployments](/docs/features/configuration).
 
-With our environment variable `NPM_TOKEN` set to the value of our secret contained npm auth token, we can go on to use it.
+With the environment variable `NPM_TOKEN` set to the value of the `npm-token` secret, which contains an npm auth token, it is ready to use.
 
-For this example, we are going to install dependencies for a [static app build](/docs/features/static-builds). Within our `Dockerfile`, we will use an [`ARG` instruction](https://docs.docker.com/engine/reference/builder/#arg) that relates to the recently created `NPM_TOKEN` environment variable.
+This example describes how to install dependencies for a [static app build](/docs/features/static-builds). The `Dockerfile` holds an [`ARG` instruction](https://docs.docker.com/engine/reference/builder/#arg) that relates to the recently created `NPM_TOKEN` environment variable.
 
 ```
 FROM mhart/alpine-node
 
-# Retrieve and relate to our environment variable
+# Retrieve and relate to the `NPM_TOKEN` environment variable
 ARG NPM_TOKEN
 
-# Print into `.npmrc` with a string using our `NPM_TOKEN` ARG
+# Print into `.npmrc` with a string using the `NPM_TOKEN` ARG
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
 
 WORKDIR /usr/src
@@ -134,17 +131,18 @@ COPY package.json yarn.lock ./
 RUN yarn
 COPY . .
 
+# Run build and export
 RUN yarn build &&
   yarn export -o /public
 ```
-<Caption>Note that the usage of the ARG variable starts with a `$`. This is necessary for Docker to recognize this as an [ARG variable](https://docs.docker.com/engine/reference/builder/#arg).</Caption>
+<Caption>Note that the usage of the `ARG` instruction starts with a `$`. This is necessary for Docker to recognize this as an [ARG instruction reference](https://docs.docker.com/engine/reference/builder/#arg).</Caption>
 
-With the `Dockerfile` complete, we can now go on to deploying with Now:
+With the `Dockerfile` complete, the project is ready to be deployed on Now:
 
 <TerminalInput>now</TerminalInput>
 
-Through the deployment lifecycle, our build will progress with our configuration including that of our environment variables and secrets!
+Through the deployment lifecycle, the build stage will execute with the configuration defined in the `Dockerfile` including that of the environment variables and secrets.
 
-Feel free to try it out yourself by using our [starter repository](https://github.com/zeit/now-build-env-starter-static).
+An example repository is available to give a more in-depth look at a project that uses build-time environment variables and secrets.
 
 export default withDoc({...meta})(({children}) => <>{children}</>)
